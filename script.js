@@ -12,43 +12,36 @@ const tasks = {
   29: "Revent's Birthday",
 };
 
-// Generate the calendar
+// Function to generate the calendar
 const generateCalendar = () => {
-  calendar.innerHTML = ""; // Clear existing calendar
+  calendar.innerHTML = ""; // Clear the calendar content first
   const year = 2025;
-  const month = 0; // January
-  const firstDay = new Date(year, month, 1).getDay();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const month = 0; // January (0-based index)
+  const firstDay = new Date(year, month, 1).getDay(); // Day of the week for Jan 1
+  const daysInMonth = new Date(year, month + 1, 0).getDate(); // Total days in January
 
-  // Add empty slots for days before the first day
+  // Add empty slots for days before the first day of the month
   for (let i = 0; i < firstDay; i++) {
     const emptyDiv = document.createElement("div");
     emptyDiv.classList.add("day", "empty");
     calendar.appendChild(emptyDiv);
   }
 
-  // Add days
+  // Add each day to the calendar
   for (let i = 1; i <= daysInMonth; i++) {
     const dayDiv = document.createElement("div");
     dayDiv.classList.add("day");
     dayDiv.innerHTML = `<strong>${i}</strong>`;
-    
+
     if (tasks[i]) {
+      // Add event indicator (circle) if a task exists for this day
       const circle = document.createElement("div");
       circle.classList.add("circle");
       dayDiv.appendChild(circle);
     }
 
-    if (!detailsListedMode) {
-      // Hover Mode: Show task details on hover
-      dayDiv.addEventListener("mouseover", () => {
-        details.textContent = tasks[i] || "No events scheduled.";
-      });
-      dayDiv.addEventListener("mouseleave", () => {
-        details.textContent = "Hover over a date to see events.";
-      });
-    } else {
-      // Details Listed Mode: Display tasks directly in the calendar
+    if (detailsListedMode) {
+      // In "Details Listed Mode", display task directly in the day cell
       if (tasks[i]) {
         const taskLabel = document.createElement("p");
         taskLabel.textContent = tasks[i];
@@ -56,19 +49,31 @@ const generateCalendar = () => {
         taskLabel.style.marginTop = "5px";
         dayDiv.appendChild(taskLabel);
       }
+    } else {
+      // In "Hover Mode", show task details in the details box on hover
+      dayDiv.addEventListener("mouseover", () => {
+        details.textContent = tasks[i] || "No events scheduled.";
+      });
+      dayDiv.addEventListener("mouseleave", () => {
+        details.textContent = "Hover over a date to see events.";
+      });
     }
 
     calendar.appendChild(dayDiv);
   }
 };
 
-// Toggle between modes
-toggleButton.addEventListener("click", () => {
-  detailsListedMode = !detailsListedMode;
+// Function to toggle between modes
+const toggleMode = () => {
+  detailsListedMode = !detailsListedMode; // Toggle the mode state
   toggleButton.textContent = detailsListedMode
     ? "Switch to Hover Mode"
     : "Switch to Details Listed Mode";
-  generateCalendar(); // Re-generate the calendar
-});
+  generateCalendar(); // Re-render the calendar to reflect the current mode
+};
 
+// Attach the toggleMode function to the button's click event
+toggleButton.addEventListener("click", toggleMode);
+
+// Generate the initial calendar in Hover Mode
 generateCalendar();
