@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Tracker Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f9f2ec;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+    }
+    .calendar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .day {
+      border: 1px solid #ccc;
+      background: #ffe8d6;
+      padding: 10px;
+      width: 80px;
+      height: 100px;
+      text-align: center;
+      border-radius: 8px;
+    }
+    .task-form {
+      margin: 20px auto;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    button {
+      background: #ff9e80;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .rewards {
+      margin-top: 20px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Task Tracker Game</h1>
+  <form class="task-form" id="taskForm">
+    <input type="text" id="taskName" placeholder="Task Name" required>
+    <input type="date" id="dueDate" required>
+    <button type="submit">Add Task</button>
+  </form>
+
+  <div class="calendar" id="calendar">
+    <!-- Days will be dynamically added here -->
+  </div>
+
+  <div class="rewards">
+    <h3>Rewards: <span id="rewardPoints">0</span> points</h3>
+  </div>
+
+  <script>
+    const calendar = document.getElementById('calendar');
+    const rewardPointsDisplay = document.getElementById('rewardPoints');
+    let rewardPoints = 0;
+
+    function createCalendar() {
+      const daysInMonth = 30; // Simplified for now
+      for (let i = 1; i <= daysInMonth; i++) {
+        const dayDiv = document.createElement('div');
+        dayDiv.classList.add('day');
+        dayDiv.innerHTML = `<strong>Day ${i}</strong><br>`;
+        calendar.appendChild(dayDiv);
+      }
+    }
+
+    function addTask(event) {
+      event.preventDefault();
+      const taskName = document.getElementById('taskName').value;
+      const dueDate = document.getElementById('dueDate').value;
+      const dueDay = new Date(dueDate).getDate();
+
+      if (dueDay) {
+        const dayDiv = calendar.children[dueDay - 1];
+        const taskItem = document.createElement('div');
+        taskItem.innerText = taskName;
+        taskItem.style.background = '#ffe4c4';
+        taskItem.style.margin = '5px';
+        taskItem.style.padding = '5px';
+        taskItem.style.borderRadius = '4px';
+
+        taskItem.addEventListener('click', () => {
+          rewardPoints += 10; // Add reward for task completion
+          rewardPointsDisplay.innerText = rewardPoints;
+          taskItem.remove();
+        });
+
+        dayDiv.appendChild(taskItem);
+      }
+    }
+
+    document.getElementById('taskForm').addEventListener('submit', addTask);
+    createCalendar();
+  </script>
+</body>
+</html>
