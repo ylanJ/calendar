@@ -87,14 +87,14 @@ button:hover {
 }
 
 /* Add background to the header */
-.header {
+/*.header {
   background: url('/Resources/header_art.png') no-repeat center;
   background-size: contain;
   height: 100px;
   display: flex;
   align-items: center;
   justify-content: center;
-}
+}*/
 
 
 .day .circle {
